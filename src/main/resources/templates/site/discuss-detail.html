@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/global.css}" />
+	<link rel="stylesheet" th:href="@{/css/discuss-detail.css}" />
+	<title>牛客网-帖子详情</title>
+</head>
+<body>
+	<div class="nk-container">
+		<!-- 头部 -->
+		<header class="bg-dark sticky-top" th:replace="index::header"></header>
+
+		<!-- 内容 -->
+		<div class="main">
+			<!-- 帖子详情 -->
+			<div class="container">
+				<!-- 标题 -->
+				<h6 class="mb-4">
+					<img src="http://static.nowcoder.com/images/img/icons/ico-discuss.png"/>
+					<span th:utext="${post.title}">帖子标题</span>
+					<div class="float-right">
+						<input type="hidden" id="postId" th:value="${post.id}">
+						<button type="button" class="btn btn-danger btn-sm" id="topBtn"
+								th:disabled="${post.type==1}"
+								sec:authorize="hasAnyAuthority('moderator')">置顶
+						</button>
+						<button type="button" class="btn btn-danger btn-sm" id="wonderfulBtn"
+								th:disabled="${post.status==1}"
+								sec:authorize="hasAnyAuthority('moderator')">加精
+						</button>
+						<button type="button" class="btn btn-danger btn-sm" id="deleteBtn"
+								th:disabled="${post.status==2}"
+								sec:authorize="hasAnyAuthority('admin')">删除
+						</button>
+						<button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back()">返回</button>
+					</div>
+				</h6>
+				<!-- 作者 -->
+				<div class="media pb-3 border-bottom">
+					<a th:href="@{|/user/profile/${user.id}|}">
+						<img th:src="${user.headerUrl}" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+					</a>
+					<div class="media-body">
+						<div class="mt-0 text-warning" th:text="${user.username}">姓名</div>
+						<div class="text-muted mt-3">
+							发布于 <b th:text="${#dates.format(post.createTime,'yyyy-MM-dd HH:mm:ss')}">发布时间</b>
+							<ul class="d-inline float-right">
+								<li class="d-inline ml-2"><a href="javascript:;" th:onclick="|like(this,1,${post.id},${post.userId},${post.id});|" class="text-primary">
+									<b th:text="${likeStatus == 0 ? '赞':'已赞'}">赞</b> <i th:text="${likeCount}">点赞数量</i></a></li>
+								<li class="d-inline ml-2">|</li>
+								<li class="d-inline ml-2"><a href="#replyform" class="text-primary">回帖 <i th:text="${post.commentCount}">回复数量</i></a></li>
+							</ul>
+						</div>
+					</div>
+				</div>	
+				<!-- 正文 -->
+				<div class="mt-4 mb-3 content" th:text="${post.content}">
+					帖子正文
+				</div>
+			</div>
+			<!-- 回帖 -->
+			<div class="container mt-3">
+				<!-- 回帖数量 -->
+				<div class="row">
+					<div class="col-8">
+						<h6><b class="square"></b> <i th:text="${post.commentCount}">回帖数量</i>条回帖</h6>
+					</div>
+					<div class="col-4 text-right">
+						<a href="#replyform" class="btn btn-primary btn-sm">&nbsp;&nbsp;回&nbsp;&nbsp;帖&nbsp;&nbsp;</a>
+					</div>
+				</div>
+				<!-- 回帖列表 -->
+				<ul class="list-unstyled mt-4" th:each="cov:${comments}">
+					<li class="media pb-3 pt-3 mb-3 border-bottom">
+						<a th:href="@{|/user/profile/${cov.user.id}|}">
+							<img th:src="${cov.user.headerUrl}" class="align-self-start mr-4 rounded-circle user-header" alt="用户头像" >
+						</a>
+						<div class="media-body">
+							<div class="mt-0">
+								<span class="font-size-12 text-success" th:text="${cov.user.username}">评论者名字</span>
+								<span class="badge badge-secondary float-right floor">
+									<i th:text="${page.offset + covStat.count}">楼层</i>#</span>
+							</div>
+							<div class="mt-2" th:text="${cov.comment.content}">
+								评论内容
+							</div>
+							<div class="mt-4 text-muted font-size-12">
+								<span>发布于 <b th:text="${#dates.format(cov.comment.createTime,'yyyy-MM-dd HH:mm:ss')}">评论时间</b></span>
+								<ul class="d-inline float-right">
+									<li class="d-inline ml-2"><a href="javascript:;" th:onclick="|like(this,2,${cov.comment.id},${cov.user.id},${post.id});|" class="text-primary">
+										<b th:text="${cov.likeStatus == 0 ? '赞':'已赞'}">赞</b>(<i th:text="${cov.likeCount}">点赞数量</i>)</a></li>
+									<li class="d-inline ml-2">|</li>
+									<li class="d-inline ml-2"><a href="#" class="text-primary">回复(<i th:text="${cov.replyCount}">回复数量</i>)</a></li>
+								</ul>
+							<!-- 回复列表 -->
+							<ul class="list-unstyled mt-4 bg-gray p-3 font-size-12 text-muted" th:each="rov:${cov.replys}">
+								<li class="pb-3 pt-3 mb-3 border-bottom">
+									<div>
+										<span th:if="${rov.target == null}">
+											<b class="text-info" th:text="${rov.user.username}">回复者名字</b>:&nbsp;&nbsp;
+										</span>
+										<span th:if="${rov.target != null}">
+											<i class="text-info" th:text="${rov.user.username}"> 回复者名字</i>回复
+											<b class="text-info" th:text="${rov.target.username}"> 被回复者姓名</b>:
+										</span>
+										<span th:text="${rov.reply.content}">回复内容</span>
+									</div>
+									<div class="mt-3">
+										<span th:text="${#dates.format(rov.reply.createTime,'yyyy-MM-dd HH:mm:ss')}">回复时间</span>
+										<ul class="d-inline float-right">
+											<li class="d-inline ml-2"><a href="javascript:;" th:onclick="|like(this,2,${rov.reply.id},${rov.user.id},${post.id});|" class="text-primary">
+												<b th:text="${rov.likeStatus == 0 ? '赞':'已赞'}">赞</b>(<i th:text="${rov.likeCount}">点赞数</i>)</a></li>
+											<li class="d-inline ml-2">|</li>
+											<li class="d-inline ml-2"><a th:href="|#huifu-${rovStat.count}|" data-toggle="collapse" class="text-primary">回复</a></li>
+										</ul>
+										<!--对回复进行回复-->
+										<div th:id="|huifu-${rovStat.count}|" class="mt-4 collapse">
+											<form method="post" th:action="@{|/comment/add/${post.id}|}">
+												<div>
+													<input type="text" class="input-size" name="content" th:placeholder="|回复${rov.user.username}|"/>
+													<input type="hidden" name="entityType" value="2">
+													<input type="hidden" name="entityId" th:value="${cov.comment.id}">
+													<input type="hidden" name="targetId" th:value="${rov.user.id}">
+												</div>
+												<div class="text-right mt-2">
+													<button type="submit" class="btn btn-primary btn-sm" onclick="#">&nbsp;&nbsp;回&nbsp;&nbsp;复&nbsp;&nbsp;</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</li>
+								<!-- 回复输入框 ：对评论进行回复-->
+								<li class="pb-3 pt-3" >
+									<form method="post" th:action="@{|/comment/add/${post.id}|}">
+										<div>
+											<input type="text" class="input-size" name="content" placeholder="请输入你的观点"/>
+											<input type="hidden" name="entityType" value="2">
+											<input type="hidden" name="entityId" th:value="${cov.comment.id}">
+										</div>
+										<div class="text-right mt-2">
+											<button type="submit" class="btn btn-primary btn-sm" onclick="#">&nbsp;&nbsp;回&nbsp;&nbsp;复&nbsp;&nbsp;</button>
+										</div>
+									</form>
+								</li>
+							</ul>
+						</div>
+					</li>
+				</ul>
+				<!-- 分页 -->
+				<nav class="mt-5" th:replace="index::pageLogic"></nav>
+			</div>
+			<!-- 评论 -->
+			<div class="container mt-3">
+				<form class="replyform" method="post" th:action="@{|/comment/add/${post.id}|}">
+					<p class="mt-3">
+						<a name="replyform"></a>
+						<textarea name="content" placeholder="在这里畅所欲言你的看法吧!"></textarea>
+						<input type="hidden" name="entityType" value="1">
+						<input type="hidden" name="entityId" th:value="${post.id}">
+					</p>
+					<p class="text-right">
+						<button type="submit" class="btn btn-primary btn-sm">&nbsp;&nbsp;回&nbsp;&nbsp;帖&nbsp;&nbsp;</button>
+					</p>
+				</form>
+			</div>
+		</div>
+
+		<!-- 尾部 -->
+		<footer class="bg-dark" th:replace="index::footer"></footer>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+	<script th:src="@{/js/global.js}"></script>
+	<script th:src="@{/js/discuss.js}"></script>
+</body>
+</html>
