@@ -21,7 +21,7 @@
         where status = 0
         and entity_id = #{entityId}
         and entity_type = #{entityType}
-        order by create_time asc
+        order by create_time desc
         limit #{offset}, #{limit}
     </select>
 
@@ -35,5 +35,19 @@
     <select id="selectCommentById" resultType="com.ningct.nowcodercommunity.entity.Comment">
         select <include refid="selectFields"></include> from comment
         where id = #{id}
+    </select>
+    <select id="findCommentByUserId" resultType="com.ningct.nowcodercommunity.entity.Comment">
+        select <include refid="selectFields"></include>
+        from comment
+        where status = 0
+        and user_id = #{userId}
+        order by create_time desc
+        limit #{offset}, #{limit}
+    </select>
+    <select id="findCommentCount" resultType="java.lang.Integer">
+        select count(id)
+        from comment
+        where status = 0
+          and user_id = #{userId}
     </select>
 </mapper>

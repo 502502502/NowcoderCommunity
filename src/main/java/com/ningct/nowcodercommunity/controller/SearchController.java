@@ -38,7 +38,6 @@ public class SearchController implements CommunityConstant {
         List<Map<String, Object>> posts = new ArrayList<>();
         if(postList != null && !postList.isEmpty()){
             for (DiscussPost post : postList) {
-                System.out.println(post.toString());
                 Map<String, Object> map = new HashMap<>();
                 map.put("post",post);
                 map.put("user",userService.findUserById(post.getUserId()));

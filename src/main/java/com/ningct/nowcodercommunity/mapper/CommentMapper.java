@@ -2,6 +2,7 @@ package com.ningct.nowcodercommunity.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ningct.nowcodercommunity.entity.Comment;
+import com.ningct.nowcodercommunity.entity.DiscussPost;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,4 +18,9 @@ public interface CommentMapper extends BaseMapper<Comment> {
     int insertComment(Comment comment);
     //查询指定评论
     Comment selectCommentById(@Param("id") int id);
+
+    //获取指定用户的评论
+    List<Comment> findCommentByUserId(@Param("userId") int userId, @Param("offset") int offset, @Param("limit") int limit);
+
+    int findCommentCount(@Param("userId") int userId);
 }

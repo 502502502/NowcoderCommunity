@@ -32,9 +32,28 @@ public class CommentService implements CommunityConstant {
         return commentMapper.selectCommentByEntity(entityType, enityId, offset, limid);
     }
 
+    //通过用户查询评论
+    public List<Comment> findCommentByUserId(int userId, int offset, int limid){
+        return commentMapper.findCommentByUserId(userId,offset,limid);
+    }
+
+    //查找评论的帖子id
+    public int findPostId(int id){
+        Comment comment = findCommentById(id);
+        while(comment.getEntityType() != 1){
+            comment = findCommentById(comment.getEntityId());
+        }
+        return comment.getEntityId();
+    }
+
     //查询实体对象的评论的数量
     public int findCommentCount(int entityType, int entityId){
         return commentMapper.selectCommentCount(entityType, entityId);
+    }
+
+    //查询用户的评论的数量
+    public int findCommentCount(int userId){
+        return commentMapper.findCommentCount(userId);
     }
 
     //插入评论
@@ -54,4 +73,6 @@ public class CommentService implements CommunityConstant {
         }
         return rows;
     }
+
+
 }

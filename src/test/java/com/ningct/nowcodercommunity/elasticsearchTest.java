@@ -63,6 +63,7 @@ public class elasticsearchTest {
             DiscussPost post = discussPostMapper.selectDiscussPostById(i);
             if(post != null){
                 searchService.addPost(post);
+                System.out.println(i);
             }
         }
     }

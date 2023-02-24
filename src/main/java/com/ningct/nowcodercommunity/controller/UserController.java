@@ -6,10 +6,11 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.PolicyConditions;
 
+import com.ningct.nowcodercommunity.entity.Comment;
+import com.ningct.nowcodercommunity.entity.DiscussPost;
+import com.ningct.nowcodercommunity.entity.Page;
 import com.ningct.nowcodercommunity.entity.User;
-import com.ningct.nowcodercommunity.service.FollowerService;
-import com.ningct.nowcodercommunity.service.LikeService;
-import com.ningct.nowcodercommunity.service.UserService;
+import com.ningct.nowcodercommunity.service.*;
 import com.ningct.nowcodercommunity.util.CommunityConstant;
 import com.ningct.nowcodercommunity.util.CommunityUtil;
 import com.ningct.nowcodercommunity.util.HostHolder;
@@ -19,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -57,6 +55,10 @@ public class UserController implements CommunityConstant {
     private LikeService likeService;
     @Resource
     private FollowerService followerService;
+    @Resource
+    private DiscussPostService discussPostService;
+    @Resource
+    private CommentService commentService;
 
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
     public String getSetting(){
@@ -120,6 +122,8 @@ public class UserController implements CommunityConstant {
             throw new IllegalArgumentException("该用户不存在！");
         }
         model.addAttribute("user",user);
+        //标记当前是个人信息还是我的帖子，或者回复
+        model.addAttribute("cur",0);
         //点赞数
         model.addAttribute("likeCount",likeService.finUserLikeCount(userId));
         //关注数
@@ -132,6 +136,76 @@ public class UserController implements CommunityConstant {
             model.addAttribute("hasFollowed", followerService.hasFollowed(hostHolder.getUser().getId(), ENTITY_TYPE_USER, userId));
         }
         return "/site/profile";
+    }
+
+    @RequestMapping(path = "/mypost/{userId}",method = RequestMethod.GET)
+    public String getMyPostPage(@PathVariable("userId") int userId, Model model, Page page){
+        User user = userService.findUserById(userId);
+        if(user == null){
+            throw new IllegalArgumentException("该用户不存在！");
+        }
+        model.addAttribute("user",user);
+        //标记当前是个人信息还是我的帖子，或者回复
+        model.addAttribute("cur",1);
+        //帖子数量
+        model.addAttribute("postCount",discussPostService.findDiscussPostRows(userId));
+
+        page.setRows(discussPostService.findDiscussPostRows(userId));
+        page.setPath("/user/mypost/" +userId);
+
+        List<DiscussPost> list = discussPostService.findDiscussPosts(userId, page.getOffset(), page.getLimit(),1);
+        List<Map<String, Object>> discussPosts = new ArrayList<>();
+        if (list != null) {
+            for (DiscussPost post : list) {
+                Map<String, Object> map = new HashMap<>();
+                //帖子
+                map.put("post", post);
+                //点赞数
+                map.put("likeCount",likeService.findEntityLikeCount(ENTITY_TYPE_POST,post.getId()));
+
+                discussPosts.add(map);
+            }
+        }
+        model.addAttribute("posts", discussPosts);
+        return "/site/my-post";
+    }
+
+    @RequestMapping(path = "/myreply/{userId}",method = RequestMethod.GET)
+    public String getMyReplyPage(@PathVariable("userId") int userId, Model model, Page page){
+        User user = userService.findUserById(userId);
+        if(user == null){
+            throw new IllegalArgumentException("该用户不存在！");
+        }
+        model.addAttribute("user",user);
+        //标记当前是个人信息还是我的帖子，或者回复
+        model.addAttribute("cur",2);
+        //回复数量
+        int count = commentService.findCommentCount(userId);
+        model.addAttribute("replyCount", count);
+
+        page.setRows(count);
+        page.setPath("/user/myreply/" +userId);
+
+        List<Comment> list = commentService.findCommentByUserId(userId, page.getOffset(), page.getLimit());
+
+        List<Map<String, Object>> replys = new ArrayList<>();
+        if (list != null) {
+            for (Comment comment : list) {
+                Map<String, Object> map = new HashMap<>();
+                //查询评论所属post
+                int id = commentService.findPostId(comment.getId());
+                //评论
+                map.put("comment", comment);
+                //帖子
+                map.put("post", discussPostService.selectDiscussPostById(id));
+                //点赞数
+                map.put("likeCount",likeService.findEntityLikeCount(ENTITY_TYPE_POST,comment.getEntityId()));
+
+                replys.add(map);
+            }
+        }
+        model.addAttribute("replys", replys);
+        return "/site/my-reply";
     }
 
     @RequestMapping(path = "/changepassword",method = RequestMethod.POST)
@@ -149,8 +223,5 @@ public class UserController implements CommunityConstant {
              return "/site/setting";
          }
     }
-
-
-
 
 }
