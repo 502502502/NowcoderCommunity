@@ -13,10 +13,7 @@ import com.ningct.nowcodercommunity.util.RedisKeyUtil;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -121,8 +118,8 @@ public class DiscussPostController implements CommunityConstant {
         return CommunityUtil.getJSONString(0,"删除成功！");
     }
 
-    @RequestMapping(path = "/detail/{discussPostId}",method = RequestMethod.GET)
-    public String getDisCussPost(@PathVariable("discussPostId") int discussPostId, Model model, Page page){
+    @RequestMapping(path = "/detail/{discussPostId}/{prePath}",method = RequestMethod.GET)
+    public String getDisCussPost(@PathVariable("discussPostId") int discussPostId, Model model, Page page, @PathVariable("prePath") String prePath){
         //找帖子
         DiscussPost post = discussPostService.selectDiscussPostById(discussPostId);
         model.addAttribute("post",post);
@@ -204,6 +201,8 @@ public class DiscussPostController implements CommunityConstant {
         }
         //将评论信息列表响应
         model.addAttribute("comments", commentVoList);
+        //上一个地址
+        model.addAttribute("prePath",prePath);
         //跳转
         return "/site/discuss-detail";
     }

@@ -2,6 +2,7 @@ $(function (){
     $("#topBtn").click(topPost);
     $("#wonderfulBtn").click(wonderfulPost);
     $("#deleteBtn").click(deletePost);
+    $("#retBtn").click(returnPrePage);
 });
 
 function like(btn,entityType, entityId, entityUserId,postId){
@@ -61,4 +62,8 @@ function deletePost(){
             }
         }
     );
+}
+function returnPrePage(){
+    $.get($("#retBtn").val(),function(data,status){
+    });
 }

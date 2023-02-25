@@ -24,7 +24,7 @@
 							 class="mr-4 rounded-circle" alt="用户头像">
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
-								<a th:href="@{|/discuss/detail/${map.post.id}|}">
+								<a th:href="@{|/discuss/detail/${map.post.id}(prePath=${#httpServletRequest.getRequestURL()})|}">
 									<i th:utext="${map.post.title}">帖子标题</i>
 								</a>
 							</h6>

@@ -115,12 +115,15 @@ public class UserController implements CommunityConstant {
         return CommunityUtil.getJSONString(0);
     }
 
-    @RequestMapping(path = "/profile/{userId}",method = RequestMethod.GET)
-    public String getProfilePage(@PathVariable("userId") int userId, Model model){
+    @RequestMapping(path = "/profile/{userId}/{prePath}",method = RequestMethod.GET)
+    public String getProfilePage(@PathVariable("userId") int userId, Model model, @PathVariable("prePath") String prePath){
         User user = userService.findUserById(userId);
         if(user == null){
             throw new IllegalArgumentException("该用户不存在！");
         }
+        //上一个地址
+        model.addAttribute("prePath",prePath);
+        System.out.println("prePath:" +prePath);
         model.addAttribute("user",user);
         //标记当前是个人信息还是我的帖子，或者回复
         model.addAttribute("cur",0);
