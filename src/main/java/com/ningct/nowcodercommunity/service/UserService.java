@@ -257,17 +257,14 @@ public class UserService implements CommunityConstant {
         User user = findUserById(userId);
 
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                switch (user.getType()){
-                    case 1:
-                        return AUTHORITY_ADMIN;
-                    case 2:
-                        return AUTHORITY_MODERATOR;
-                    default:
-                        return AUTHORITY_USER;
-                }
+        list.add((GrantedAuthority) () -> {
+            switch (user.getType()){
+                case 1:
+                    return AUTHORITY_ADMIN;
+                case 2:
+                    return AUTHORITY_MODERATOR;
+                default:
+                    return AUTHORITY_USER;
             }
         });
         return list;

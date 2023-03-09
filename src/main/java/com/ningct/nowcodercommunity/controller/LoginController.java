@@ -52,11 +52,9 @@ public class LoginController implements CommunityConstant {
     }
 
     @RequestMapping(path = "/kaptcha",method = RequestMethod.GET)
-    public void getKaptchaPage(HttpServletResponse response, HttpSession session){
+    public void getKaptchaPage(HttpServletResponse response){
         String text = producer.createText();
         BufferedImage image = producer.createImage(text);
-        //将验证码存入session
-        //session.setAttribute("kaptcha",text);
 
         //验证码归属设置cookie
         String kaptchaOwner = CommunityUtil.generateUUID();
