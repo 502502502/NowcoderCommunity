@@ -20,6 +20,9 @@
             #{id}
         </foreach>
     </update>
+    <delete id="deleteallMessage">
+        delete from message
+    </delete>
     <select id="selectConversations" resultType="com.ningct.nowcodercommunity.entity.Message">
         select <include refid="selectFields"></include>
         from message

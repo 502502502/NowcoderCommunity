@@ -3,11 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>牛客网-私信列表</title>
+	<title>私信列表</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -76,7 +75,7 @@
 				<ul class="list-unstyled" th:each="cvs:${conversations}">
 					<li class="media pb-3 pt-3 mb-3 border-bottom position-relative">
 						<span class="badge badge-danger" th:text="${cvs.unReadCound == 0 ? '': cvs.unReadCount}">未读消息数</span>
-						<a href="profile.html">
+						<a th:href="@{|/user/profile/${cvs.target.id}|}">
 							<img th:src="${cvs.target.headerUrl}" class="mr-4 rounded-circle user-header" alt="用户头像" >
 						</a>
 						<div class="media-body">

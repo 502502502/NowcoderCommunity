@@ -18,6 +18,9 @@ public interface UserMapper extends BaseMapper<User> {
 
     //插入新增用户
     int insertUser(User user);
+    //删除用户
+    int removeUser(@Param("id")int  id);
+    int removeAllUser();
 
     //更新用户的状态
     int updateStatus(@Param("id") int id, @Param("status") int status);

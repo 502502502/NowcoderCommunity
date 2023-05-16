@@ -19,7 +19,6 @@ function follow() {
 			}
 		);
 
-		//$(btn).text("已关注").removeClass("btn-info").addClass("btn-secondary");
 	} else {
 		// 取消关注
 		$.post(

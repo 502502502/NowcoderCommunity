@@ -18,6 +18,9 @@ public interface DiscussPostMapper extends BaseMapper<DiscussPost> {
     //插入帖子
     int insertDiscussPost(DiscussPost post);
 
+    //删除所有帖子
+    int deleteallDiscussPost();
+
     //通过id查询帖子
     DiscussPost selectDiscussPostById(@Param("id") int id);
 

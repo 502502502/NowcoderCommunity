@@ -10,9 +10,9 @@ function check_data() {
 		$("#confirm-password").addClass("is-invalid");
 		return false;
 	}
+	$(".main").hide();
 	return true;
 }
-
 function clear_error() {
 	$(this).removeClass("is-invalid");
 }

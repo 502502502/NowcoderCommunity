@@ -27,8 +27,8 @@ public class MailClient {
             messageHelper.setFrom(from);
             messageHelper.setTo(to);
             messageHelper.setSubject(subject);
-            messageHelper.setText(context);
-
+            //设置为html解析
+            messageHelper.setText(context,true);
             mailSender.send(messageHelper.getMimeMessage());
         }catch (Exception e){
             logger.error("发送邮件失败" +e.getMessage());

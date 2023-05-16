@@ -3,11 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/letter.css}" />
-	<title>牛客网-通知详情</title>
+	<title>通知详情</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -21,15 +20,12 @@
 					<div class="col-8">
 						<h6><b class="square"></b> 系统通知</h6>
 					</div>
-					<div class="col-4 text-right">
-						<button type="button" class="btn btn-secondary btn-sm" onclick="window.history.back()">返回</button>
-					</div>
 				</div>
 				
 				<!-- 通知列表 -->
 				<ul class="list-unstyled mt-4" th:each="map:${notices}">
 					<li class="media pb-3 pt-3 mb-2">
-						<img th:src="${map.fromUser.headerUrl}" class="mr-4 rounded-circle user-header" alt="系统头像">
+						<img src="https://ningct.oss-cn-hangzhou.aliyuncs.com/community/img/heade_imgs/system.jpg" class="mr-4 rounded-circle user-header" alt="系统头像">
 						<div class="toast show d-lg-block" role="alert" aria-live="assertive" aria-atomic="true">
 							<div class="toast-header">
 								<strong class="mr-auto" th:text="${map.user.username}">触发对象的名称</strong>

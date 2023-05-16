@@ -16,6 +16,8 @@ public interface CommentMapper extends BaseMapper<Comment> {
     int selectCommentCount(@Param("entityType") int entityType, @Param("entityId") int entityId);
     //插入评论
     int insertComment(Comment comment);
+    //删除所有评论
+    int deleteallComment();
     //查询指定评论
     Comment selectCommentById(@Param("id") int id);
 

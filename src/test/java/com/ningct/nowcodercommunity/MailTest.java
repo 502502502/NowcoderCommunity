@@ -23,7 +23,7 @@ public class MailTest {
     public void sentHtml(){
         Context context = new Context();
         context.setVariable("username", "tom");
-        String content = templateEngine.process("/mail/demo", context);
+        String content = templateEngine.process("/mail/forget", context);
         mailClient.sentMail("2640069987@qq.com", "testHtml", content);
     }
 }

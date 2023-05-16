@@ -4,6 +4,7 @@ package com.ningct.nowcodercommunity.controller;
 import com.ningct.nowcodercommunity.entity.Comment;
 import com.ningct.nowcodercommunity.entity.DiscussPost;
 import com.ningct.nowcodercommunity.entity.Event;
+import com.ningct.nowcodercommunity.entity.Page;
 import com.ningct.nowcodercommunity.event.EventProducer;
 import com.ningct.nowcodercommunity.service.CommentService;
 import com.ningct.nowcodercommunity.service.DiscussPostService;
@@ -36,12 +37,12 @@ public class CommentController implements CommunityConstant {
 
     @RequestMapping(path = "/add/{discussPostId}",method = RequestMethod.POST)
 
-    public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment){
+    public String addComment(@PathVariable("discussPostId") int discussPostId, Comment comment, Page page){
         comment.setCreateTime(new Date());
         comment.setStatus(0);
         comment.setUserId(hostHolder.getUser().getId());
         commentService.addComment(comment);
-
+        System.out.println(page.getCurrent());
         //创建评论事件
         Event event = new Event();
         //设置主题
@@ -78,6 +79,6 @@ public class CommentController implements CommunityConstant {
         event1.setEntityId(discussPostId);
         eventProducer.fireEvent(event1);
 
-        return "redirect:/discuss/detail/" +discussPostId;
+        return "redirect:/discuss/detail/" +discussPostId+"?current="+page.getCurrent();
     }
 }

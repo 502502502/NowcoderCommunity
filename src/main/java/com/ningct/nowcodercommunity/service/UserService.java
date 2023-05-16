@@ -72,14 +72,14 @@ public class UserService implements CommunityConstant {
         // 验证账号
         User u = userMapper.selectByName(user.getUsername());
         if (u != null) {
-            map.put("usernameMsg", "该账号已存在!");
+            map.put("usernameMsg", "该账号已存在");
             return map;
         }
 
         // 验证邮箱
         u = userMapper.selectByEmail(user.getEmail());
         if (u != null) {
-            map.put("emailMsg", "该邮箱已被注册!");
+            map.put("emailMsg", "该邮箱已被注册");
             return map;
         }
 
@@ -87,9 +87,9 @@ public class UserService implements CommunityConstant {
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
         user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
         user.setType(0);
-        user.setStatus(0);
+        user.setStatus(1);
         user.setActivationCode(CommunityUtil.generateUUID());
-        user.setHeaderUrl(String.format("http://images.nowcoder.com/head/%dt.png", new Random().nextInt(1000)));
+        user.setHeaderUrl(String.format("https://ningct.oss-cn-hangzhou.aliyuncs.com/community/img/heade_imgs/%d.jpg", new Random().nextInt(10)));
         user.setCreateTime(new Date());
         userMapper.insertUser(user);
 
@@ -106,6 +106,41 @@ public class UserService implements CommunityConstant {
         mailClient.sentMail(user.getEmail(), "激活账号", content);
 
         return map;
+    }
+    //发送重置邮件
+    public Map<String, Object> cent(String email){
+        Map<String ,Object> map = new HashMap<>();
+        User user = userMapper.selectByEmail(email);
+        if(user == null){
+            map.put("emailMsg","该邮箱不存在");
+            return map;
+        }
+        //将随机码写入redis
+        String v = CommunityUtil.generateUUID().substring(0,10);
+        String emailKey = RedisKeyUtil.getEmailKey(v);
+        redisTemplate.opsForValue().set(emailKey,email);
+
+        //将重置页面发送到邮箱
+        Context context = new Context();
+        context.setVariable("email", email);
+        // http://localhost:8080/community/activation/101/code
+        String url = domain + contextPath + "/reset/" + v;
+        context.setVariable("url", url);
+        String content = templateEngine.process("/mail/forget", context);
+        mailClient.sentMail(user.getEmail(), "重置密码邮件", content);
+        return map;
+    }
+    //重置密码
+    public boolean reset(String v, String password){
+        //获取邮箱
+        String emailKey = RedisKeyUtil.getEmailKey(v);
+        String email = (String) redisTemplate.opsForValue().get(emailKey);
+        //密码加密
+        User user = userMapper.selectByEmail(email);
+        if(user == null)return false;
+        //更新数据库
+        int ret = userMapper.updatePassword(user.getId(), CommunityUtil.md5(password + user.getSalt()));
+        return ret == 1;
     }
 
     //激活
@@ -213,10 +248,6 @@ public class UserService implements CommunityConstant {
             map.put("oldPasswordMsg","初始密码不正确！");
             return map;
         }
-        if(newPassword.length() < 8){
-            map.put("newPasswordMsg","密码不能小于8位！");
-            return map;
-        }
         if(!newPassword.equals(confirmPassword)){
             map.put("confirmPasswordMsg","两次输入密码不一致！");
             return map;
@@ -255,7 +286,6 @@ public class UserService implements CommunityConstant {
     //查询用户的权限
     public  Collection<? extends GrantedAuthority>  getAuthorities(int userId){
         User user = findUserById(userId);
-
         List<GrantedAuthority> list = new ArrayList<>();
         list.add((GrantedAuthority) () -> {
             switch (user.getType()){

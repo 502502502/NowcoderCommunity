@@ -3,10 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<title>牛客网-搜索结果</title>
+	<title>搜索结果</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -24,7 +23,7 @@
 							 class="mr-4 rounded-circle" alt="用户头像">
 						<div class="media-body">
 							<h6 class="mt-0 mb-3">
-								<a th:href="@{|/discuss/detail/${map.post.id}(prePath=${#httpServletRequest.getRequestURL()})|}">
+								<a th:href="@{|/discuss/detail/${map.post.id}|}">
 									<i th:utext="${map.post.title}">帖子标题</i>
 								</a>
 							</h6>

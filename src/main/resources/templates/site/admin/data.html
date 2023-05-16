@@ -3,10 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{css/global.css}" />
-	<title>牛客网-数据统计</title>
+	<title>数据统计</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -21,12 +20,12 @@
 				<form class="form-inline mt-3" method="post" th:action="@{/data/uv}">
 					<input type="date" class="form-control" required name="startDate" th:value="${#dates.format(uvStartDate,'yyyy-MM-dd')}"/>
 					<input type="date" class="form-control ml-3" required name="endDate" th:value="${#dates.format(uvEndDate,'yyyy-MM-dd')}"/>
-					<button type="submit" class="btn btn-primary ml-3">开始统计</button>
+					<button type="submit" class="btn btn-primary ml-3">统计</button>
 				</form>
 				<ul class="list-group mt-3 mb-3">
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						统计结果
-						<span class="badge badge-primary badge-danger font-size-14" th:text="${uvResult}"></span>
+						<i class="badge badge-primary badge-danger font-size-14" th:text="${uvResult}"></i>
 					</li>
 				</ul>
 			</div>
@@ -36,15 +35,15 @@
 				<form class="form-inline mt-3" method="post" th:action="@{/data/dau}">
 					<input type="date" class="form-control" required name="startDate" th:value="${#dates.format(dauStartDate,'yyyy-MM-dd')}"/>
 					<input type="date" class="form-control ml-3" required name="endDate" th:value="${#dates.format(dauEndDate,'yyyy-MM-dd')}"/>
-					<button type="submit" class="btn btn-primary ml-3">开始统计</button>
+					<button type="submit" class="btn btn-primary ml-3">统计</button>
 				</form>
 				<ul class="list-group mt-3 mb-3">
 					<li class="list-group-item d-flex justify-content-between align-items-center">
 						统计结果
-						<span class="badge badge-primary badge-danger font-size-14" th:text="${dauResult}"></span>
+						<i class="badge badge-primary badge-danger font-size-14" th:text="${dauResult}"></i>
 					</li>
 				</ul>
-			</div>				
+			</div>
 		</div>
 
 		<!-- 尾部 -->

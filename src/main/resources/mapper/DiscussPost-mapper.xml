@@ -34,6 +34,9 @@
         set score = #{score}
         where id = #{id}
     </update>
+    <delete id="deleteallDiscussPost">
+        delete  from discuss_post
+    </delete>
 
     <select id="selectDiscussPosts" resultType="com.ningct.nowcodercommunity.entity.DiscussPost">
         select <include refid="selectFields"></include>

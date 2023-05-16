@@ -10,13 +10,13 @@ public class RedisKeyUtil {
     public static final String PREFIX_FOLLOWER = "follower";
 
     public static final String PREFIX_KAPTCHA = "kaptcha";
-
     public static final String PREFIX_TICKET = "ticket";
 
     public static final String PREFIX_USER = "user";
     public static final String PREFIX_UV = "uv";
     public static final String PREFIX_DAU = "dau";
     private static final String PREFIX_POST = "post";
+    private static final String PREFIX_RESET = "reset";
 
     //生成点赞关键词
     public static String getEntityLikeKey(int entityType, int entityId){
@@ -39,6 +39,10 @@ public class RedisKeyUtil {
     //登录验证码
     public static String getKaptchaKey(String owner){
         return PREFIX_KAPTCHA +SPLIT +owner;
+    }
+    //重置验证码
+    public static String getEmailKey(String email){
+        return PREFIX_RESET +SPLIT +email;
     }
     //登录凭证
     public static String getTicketKey(String ticket){

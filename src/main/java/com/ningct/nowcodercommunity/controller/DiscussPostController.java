@@ -71,7 +71,12 @@ public class DiscussPostController implements CommunityConstant {
     @RequestMapping(path = "/top",method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussostTop(int postId){
-        discussPostService.updatePostType(postId, 1);
+        DiscussPost post = discussPostService.selectDiscussPostById(postId);
+        if(post.getType() == 0) {
+            discussPostService.updatePostType(postId, 1);
+        }else{
+            discussPostService.updatePostType(postId, 0);
+        }
 
         //发帖事件，更新ES
         Event event = new Event();
@@ -80,14 +85,20 @@ public class DiscussPostController implements CommunityConstant {
         event.setEntityType(ENTITY_TYPE_POST);
         eventProducer.fireEvent(event);
 
-        return CommunityUtil.getJSONString(0,"置顶成功！");
+        return CommunityUtil.getJSONString(0,"成功！");
     }
 
     //加精
     @RequestMapping(path = "/wonderful",method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussostWoderful(int postId){
-        discussPostService.updatePostStatus(postId, 1);
+        DiscussPost post = discussPostService.selectDiscussPostById(postId);
+        if(post.getStatus() == 0) {
+            discussPostService.updatePostStatus(postId, 1);
+        }else{
+            discussPostService.updatePostStatus(postId, 0);
+        }
+
 
         //发帖事件，更新ES
         Event event = new Event();
@@ -100,7 +111,7 @@ public class DiscussPostController implements CommunityConstant {
         String key = RedisKeyUtil.getScorePostRefreshKey();
         redisTemplate.opsForSet().add(key,postId);
 
-        return CommunityUtil.getJSONString(0,"加精成功！");
+        return CommunityUtil.getJSONString(0,"成功！");
     }
 
     //删除
@@ -118,8 +129,8 @@ public class DiscussPostController implements CommunityConstant {
         return CommunityUtil.getJSONString(0,"删除成功！");
     }
 
-    @RequestMapping(path = "/detail/{discussPostId}/{prePath}",method = RequestMethod.GET)
-    public String getDisCussPost(@PathVariable("discussPostId") int discussPostId, Model model, Page page, @PathVariable("prePath") String prePath){
+    @RequestMapping(path = "/detail/{discussPostId}",method = RequestMethod.GET)
+    public String getDisCussPost(@PathVariable("discussPostId") int discussPostId, Model model, Page page){
         //找帖子
         DiscussPost post = discussPostService.selectDiscussPostById(discussPostId);
         model.addAttribute("post",post);
@@ -201,8 +212,6 @@ public class DiscussPostController implements CommunityConstant {
         }
         //将评论信息列表响应
         model.addAttribute("comments", commentVoList);
-        //上一个地址
-        model.addAttribute("prePath",prePath);
         //跳转
         return "/site/discuss-detail";
     }

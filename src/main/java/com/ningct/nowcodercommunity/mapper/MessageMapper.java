@@ -14,6 +14,8 @@ public interface MessageMapper extends BaseMapper<Message> {
 
     //查找用户的会话数量
     int selectConversationCount(@Param("userId")int userId);
+    //删除所有
+    int deleteallMessage();
 
     //查找某个会话的消息列表
     List<Message> selectLetters(@Param("conversationId")String conversationId, @Param("offset")int offset, @Param("limit")int limit);

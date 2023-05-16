@@ -3,11 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
-	<title>牛客网-登录</title>
+	<title>登录</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -37,9 +36,7 @@
 							<input type="password" th:class="|form-control ${passwordMsg!=null?'is-invalid':''}|"
 								   th:value="${param.password}"
 								   id="password" name="password" placeholder="请输入您的密码!" required>
-							<div class="invalid-feedback" th:text="${passwordMsg}">
-								密码长度不能小于8位!
-							</div>							
+							<div class="invalid-feedback" th:text="${passwordMsg}"></div>
 						</div>
 					</div>
 					<div class="form-group row mt-4">
@@ -62,7 +59,7 @@
 							<input type="checkbox" id="remember-me" name="rememberMe"
 								   th:checked="${param.rememberMe}">
 							<label class="form-check-label" for="remember-me">记住</label>
-							<a href="forget.html" class="text-danger float-right">忘记密码?</a>
+							<a th:href="@{/forget}" class="text-danger float-right">忘记密码?</a>
 						</div>
 					</div>				
 					<div class="form-group row mt-4">

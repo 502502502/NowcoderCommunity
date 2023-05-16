@@ -5,6 +5,7 @@ import com.ningct.nowcodercommunity.entity.User;
 import com.ningct.nowcodercommunity.service.UserService;
 import com.ningct.nowcodercommunity.util.CommunityConstant;
 import com.ningct.nowcodercommunity.util.CommunityUtil;
+import com.ningct.nowcodercommunity.util.HostHolder;
 import com.ningct.nowcodercommunity.util.RedisKeyUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @Controller
@@ -49,6 +51,16 @@ public class LoginController implements CommunityConstant {
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String getLoginPage(){
         return "/site/login";
+    }
+
+    @RequestMapping(path = "/forget", method = RequestMethod.GET)
+    public String getForgetPage(){
+        return "/site/forget";
+    }
+    @RequestMapping(path = "/reset/{emailvalue}", method = RequestMethod.GET)
+    public String getresetPage(Model model, @PathVariable("emailvalue") String email) {
+        model.addAttribute("emailvalue",email);
+        return "/site/reset";
     }
 
     @RequestMapping(path = "/kaptcha",method = RequestMethod.GET)
@@ -78,6 +90,7 @@ public class LoginController implements CommunityConstant {
             logger.error("响应验证码失败！" + e.getMessage());
         }
     }
+
 
     @RequestMapping(path = "/register",method = RequestMethod.POST)
     public String register(Model model, User user) throws IllegalArgumentException{
@@ -141,6 +154,31 @@ public class LoginController implements CommunityConstant {
             model.addAttribute("passwordMsg",map.get("passwordMsg"));
             return "/site/login";
         }
+    }
+
+
+
+    @RequestMapping(path = "/forget",method = RequestMethod.POST)
+    public String forget(Model model, String email){
+        Map<String ,Object> map = userService.cent(email);
+        if(map.isEmpty()){
+            model.addAttribute("msg", "我们已经向您的邮箱发送了一份重置邮件，请尽快重置！");
+            model.addAttribute("target","/index");
+            return "/site/operate-result";
+        }
+        model.addAttribute("emailMsg",map.get("emailMsg"));
+        return "/site/forget";
+    }
+    @RequestMapping(path = "/reset",method = RequestMethod.POST)
+    public String reset(Model model, String emailvalue, String password){
+        if(userService.reset(emailvalue,password)){
+            model.addAttribute("msg", "修改成功！");
+            model.addAttribute("target","/index");
+            return "/site/operate-result";
+        }
+        model.addAttribute("passwordMsg","密码重置失败");
+        model.addAttribute("email",emailvalue);
+        return "/site/reset";
     }
 
     @RequestMapping(path = "/logout",method = RequestMethod.GET)

@@ -3,10 +3,9 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="icon" href="https://static.nowcoder.com/images/logo_87_87.png"/>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" crossorigin="anonymous">
 	<link rel="stylesheet" th:href="@{/css/global.css}" />
-	<title>牛客网-个人主页</title>
+	<title>个人主页</title>
 </head>
 <body>
 	<div class="nk-container">
@@ -29,7 +28,6 @@
 							<a th:class="|nav-link ${cur==2?'active':''}|" th:href="@{|/user/myreply/${user.id}|}" th:if="${loginUser.id == user.id}">我的回复</a>
 						</li>
 					</ul>
-					<a th:href="@{prePath}" class="text-muted position-absolute rt-0">返回&gt;</a>
 				</div>
 				<!-- 个人信息 -->
 				<div class="media mt-5">
@@ -48,8 +46,8 @@
 							<span>注册于 <i class="text-muted" th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm:ss')}">注册时间</i></span>
 						</div>
 						<div class="text-muted mt-3 mb-5">
-							<span>关注了 <a class="text-primary" th:href="@{|/followees/${user.id}|}"> <i th:text="${followee}">关注数量</i></a> 人</span>
-							<span class="ml-4">关注者 <a class="text-primary" th:href="@{|/followers/${user.id}|}"><i th:text="${follower}">粉丝数量</i></a> 人</span>
+							<span> <a class="text-primary" th:if="${loginUser.id == user.id}" th:href="@{|/followees/${user.id}|}"> <i th:text="关注了 +${followee}+ 人">关注数量</i></a> </span>
+							<span class="ml-4"><a class="text-primary" th:if="${loginUser.id == user.id}" th:href="@{|/followers/${user.id}|}"><i th:text="关注者 +${follower}+ 人">粉丝数量</i></a> </span>
 							<span class="ml-4">获得了 <i class="text-danger" th:text="${likeCount}">点赞数量</i> 个赞</span>
 						</div>
 					</div>

@@ -10,6 +10,12 @@
     <sql id="selectFields">
         id, username, password, salt, email, type, status, activation_code, header_url, create_time
     </sql>
+    <delete id="removeUser">
+        delete from user where id=#{id}
+    </delete>
+    <delete id="removeAllUser">
+        delete from user
+    </delete>
 
     <select id="selectById" resultType="com.ningct.nowcodercommunity.entity.User">
         select <include refid="selectFields"></include>

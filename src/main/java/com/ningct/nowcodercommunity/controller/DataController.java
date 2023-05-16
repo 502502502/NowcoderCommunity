@@ -29,7 +29,7 @@ public class DataController {
         model.addAttribute("uvResult",res);
         model.addAttribute("uvStartDate",startDate);
         model.addAttribute("uvEndDate",endDate);
-        return "forward:/data";
+        return "site/admin/data";
     }
     @RequestMapping(path = "/data/dau",method = RequestMethod.POST)
     public String getDAU(@DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
@@ -39,7 +39,7 @@ public class DataController {
         model.addAttribute("dauResult",res);
         model.addAttribute("dauStartDate",startDate);
         model.addAttribute("dauEndDate",endDate);
-        return "forward:/data";
+        return "site/admin/data";
     }
 
 }

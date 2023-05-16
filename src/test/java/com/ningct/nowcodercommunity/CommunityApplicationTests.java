@@ -1,7 +1,9 @@
 package com.ningct.nowcodercommunity;
 
 import com.ningct.nowcodercommunity.entity.*;
+import com.ningct.nowcodercommunity.mapper.CommentMapper;
 import com.ningct.nowcodercommunity.mapper.DiscussPostMapper;
+import com.ningct.nowcodercommunity.mapper.MessageMapper;
 import com.ningct.nowcodercommunity.mapper.UserMapper;
 import com.ningct.nowcodercommunity.service.CommentService;
 import com.ningct.nowcodercommunity.service.DiscussPostService;
@@ -27,6 +29,10 @@ class CommunityApplicationTests {
     private UserMapper userMapper;
     @Resource
     private DiscussPostMapper discussPostMapper;
+    @Resource
+    private CommentMapper commentMapper;
+    @Resource
+    private MessageMapper messageMapper;
     @Resource
     private DiscussPostService discussPostService;
     @Resource
@@ -131,11 +137,10 @@ class CommunityApplicationTests {
         System.out.println(CommunityUtil.getJSONString(0, "正常", map));
     }
 
-    @Test
-    public void userMapperTest(){
-        User user =  userMapper.selectById(155);
-        System.out.println(userMapper.updateStatus(155, 1));
-    }
+//    @Test
+//    public void userMapperTest(){
+//        messageMapper.deleteallMessage();
+//    }
     @Test
     public  void discussPostTest(){
         List<DiscussPost> list = discussPostMapper.selectList(null);

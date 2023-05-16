@@ -2,7 +2,6 @@ $(function (){
     $("#topBtn").click(topPost);
     $("#wonderfulBtn").click(wonderfulPost);
     $("#deleteBtn").click(deletePost);
-    $("#retBtn").click(returnPrePage);
 });
 
 function like(btn,entityType, entityId, entityUserId,postId){
@@ -28,7 +27,7 @@ function topPost(){
         function (data){
             data = JSON.parse(data);
             if(data.code == 0){
-                $("#topBtn").attr("disabled","disabled");
+                window.location.reload();
             }else{
                 alert(data.msg);
             }
@@ -42,7 +41,7 @@ function wonderfulPost(){
         function (data){
             data = JSON.parse(data);
             if(data.code == 0){
-                $("#wonderfulBtn").attr("disabled","disabled");
+                window.location.reload();
             }else{
                 alert(data.msg);
             }
@@ -62,8 +61,4 @@ function deletePost(){
             }
         }
     );
-}
-function returnPrePage(){
-    $.get($("#retBtn").val(),function(data,status){
-    });
 }

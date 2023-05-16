@@ -60,6 +60,7 @@ public class ElasticSearchService {
         }
     }
 
+
     //查找在全文搜索里的指定关键词的帖子数量
     public int findPostCount(String keyword){
         //查询字段

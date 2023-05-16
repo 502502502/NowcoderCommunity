@@ -14,6 +14,9 @@
         insert into comment(<include refid="insertFields"></include>)
         values (#{userId},#{entityType},#{entityId},#{targetId},#{content},#{status},#{createTime})
     </insert>
+    <delete id="deleteallComment">
+        delete from comment
+    </delete>
 
     <select id="selectCommentByEntity" resultType="com.ningct.nowcodercommunity.entity.Comment">
         select <include refid="selectFields"></include>

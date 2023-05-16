@@ -68,7 +68,7 @@ public class ScoreRefreshJob implements Job, CommunityConstant {
         long likeCount = likeService.findEntityLikeCount(ENTITY_TYPE_POST, postId);
 
         //计算权重
-        double w = (status == 1 ? 75 : 0) + commentCount *10 + likeCount *2;
+        double w = (status == 1 ? 1000 : 0) + commentCount *10 + likeCount *2;
         double score = Math.log10(Math.max(w,1))
                 +(post.getCreateTime().getTime() -epoch.getTime())/(1000*3600*24);
         post.setScore(score);
