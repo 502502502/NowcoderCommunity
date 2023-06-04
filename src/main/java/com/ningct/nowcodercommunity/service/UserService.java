@@ -87,7 +87,7 @@ public class UserService implements CommunityConstant {
         user.setSalt(CommunityUtil.generateUUID().substring(0, 5));
         user.setPassword(CommunityUtil.md5(user.getPassword() + user.getSalt()));
         user.setType(0);
-        user.setStatus(1);
+        user.setStatus(0);
         user.setActivationCode(CommunityUtil.generateUUID());
         user.setHeaderUrl(String.format("https://ningct.oss-cn-hangzhou.aliyuncs.com/community/img/heade_imgs/%d.jpg", new Random().nextInt(10)));
         user.setCreateTime(new Date());
